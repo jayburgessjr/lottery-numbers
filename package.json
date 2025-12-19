@@ -1,0 +1,16 @@
+{
+  "name": "jb-launcher",
+  "private": true,
+  "scripts": {
+    "dev": "next dev"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.23",
+    "next": "latest",
+    "openai": "^6.15.0",
+    "postcss": "^8.5.6",
+    "react": "latest",
+    "react-dom": "latest",
+    "tailwindcss": "^4.1.18"
+  }
+}
