@@ -108,20 +108,23 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <main className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 py-12 px-4">
+      <main className="min-h-screen bg-slate-50 py-8 px-4 sm:py-12">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-5xl font-bold text-gray-800 mb-3">
-              🎲 AI Powerball Generator Pro
+          <div className="text-center mb-8 sm:mb-12">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-900 rounded-2xl mb-4 shadow-lg">
+              <span className="text-3xl">🎲</span>
+            </div>
+            <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-2 tracking-tight">
+              Powerball Generator Pro
             </h1>
-            <p className="text-gray-600 text-lg">
-              Smart strategies, historical insights, AI-powered picks
+            <p className="text-slate-600 text-base sm:text-lg font-medium">
+              Data-driven strategies • Historical insights • AI-powered analysis
             </p>
           </div>
 
           {/* Main Card */}
-          <div className="bg-white rounded-2xl shadow-2xl p-8 mb-8">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8 mb-6 sm:mb-8">
             {/* Strategy Selector */}
             <StrategySelector
               selectedStrategy={strategy}
@@ -174,9 +177,9 @@ export default function Home() {
           <HistoryList key={historyKey} />
 
           {/* Footer */}
-          <div className="text-center mt-8 text-gray-500 text-sm">
-            <p>Generated numbers use AI and historical analysis for entertainment.</p>
-            <p className="mt-1">Lottery is random. Past results don't predict future drawings. Play responsibly.</p>
+          <div className="text-center mt-8 sm:mt-12 text-slate-500 text-sm max-w-2xl mx-auto">
+            <p className="font-medium">Generated numbers use AI and historical analysis for entertainment purposes only.</p>
+            <p className="mt-2 text-slate-400">Lottery drawings are random. Past results don't predict future outcomes. Play responsibly.</p>
           </div>
         </div>
       </main>

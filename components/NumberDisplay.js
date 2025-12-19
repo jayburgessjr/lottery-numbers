@@ -1,20 +1,20 @@
 export default function NumberDisplay({ numbers, powerball, isLoading }) {
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="flex justify-center gap-4">
+      <div className="space-y-8">
+        <div className="flex justify-center gap-3 sm:gap-4 flex-wrap">
           {[1, 2, 3, 4, 5].map((i) => (
             <div
               key={i}
-              className="w-16 h-16 rounded-full bg-gray-200 animate-pulse flex items-center justify-center"
+              className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-slate-100 animate-pulse flex items-center justify-center border border-slate-200"
             >
-              <span className="text-gray-400 text-sm">?</span>
+              <span className="text-slate-300 text-sm">?</span>
             </div>
           ))}
         </div>
         <div className="flex justify-center">
-          <div className="w-20 h-20 rounded-full bg-red-200 animate-pulse flex items-center justify-center">
-            <span className="text-red-400 text-sm">?</span>
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-100 animate-pulse flex items-center justify-center border border-slate-200">
+            <span className="text-slate-300 text-sm">?</span>
           </div>
         </div>
       </div>
@@ -22,16 +22,16 @@ export default function NumberDisplay({ numbers, powerball, isLoading }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 py-6">
       {/* Main Numbers */}
       <div>
-        <p className="text-sm text-gray-600 text-center mb-3 font-medium">Main Numbers</p>
-        <div className="flex justify-center gap-4 flex-wrap">
+        <p className="text-xs uppercase tracking-wide text-slate-500 text-center mb-4 font-semibold">Main Numbers</p>
+        <div className="flex justify-center gap-3 sm:gap-4 flex-wrap">
           {numbers && numbers.length > 0 ? (
             numbers.map((num, index) => (
               <div
                 key={index}
-                className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center text-2xl font-bold shadow-lg transform transition-all duration-300 hover:scale-110"
+                className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-slate-900 text-white flex items-center justify-center text-xl sm:text-2xl font-bold shadow-md border-2 border-slate-700 transition-transform duration-200 hover:scale-105"
                 style={{
                   animationDelay: `${index * 100}ms`
                 }}
@@ -43,7 +43,7 @@ export default function NumberDisplay({ numbers, powerball, isLoading }) {
             [1, 2, 3, 4, 5].map((i) => (
               <div
                 key={i}
-                className="w-16 h-16 rounded-full bg-gray-100 border-2 border-gray-300 flex items-center justify-center text-gray-400 text-xl"
+                className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-slate-50 border-2 border-slate-200 flex items-center justify-center text-slate-300 text-xl"
               >
                 ?
               </div>
@@ -54,14 +54,14 @@ export default function NumberDisplay({ numbers, powerball, isLoading }) {
 
       {/* Powerball Number */}
       <div>
-        <p className="text-sm text-gray-600 text-center mb-3 font-medium">Powerball</p>
+        <p className="text-xs uppercase tracking-wide text-slate-500 text-center mb-4 font-semibold">Powerball</p>
         <div className="flex justify-center">
           {powerball ? (
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-red-500 to-red-600 text-white flex items-center justify-center text-3xl font-bold shadow-lg transform transition-all duration-300 hover:scale-110">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-rose-600 text-white flex items-center justify-center text-2xl sm:text-3xl font-bold shadow-md border-2 border-rose-500 transition-transform duration-200 hover:scale-105">
               {powerball}
             </div>
           ) : (
-            <div className="w-20 h-20 rounded-full bg-gray-100 border-2 border-gray-300 flex items-center justify-center text-gray-400 text-2xl">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-50 border-2 border-slate-200 flex items-center justify-center text-slate-300 text-2xl">
               ?
             </div>
           )}
