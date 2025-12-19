@@ -4,18 +4,26 @@ import NumberDisplay from '../components/NumberDisplay';
 import GenerateButton from '../components/GenerateButton';
 import AIReasoning from '../components/AIReasoning';
 import HistoryList from '../components/HistoryList';
+import StrategySelector from '../components/StrategySelector';
+import QuickPickSettings from '../components/QuickPickSettings';
+import MultipleSetsDisplay from '../components/MultipleSetsDisplay';
+import StatsDashboard from '../components/StatsDashboard';
 
 export default function Home() {
   const [numbers, setNumbers] = useState([]);
   const [powerball, setPowerball] = useState(null);
   const [reasoning, setReasoning] = useState('');
+  const [strategy, setStrategy] = useState('random');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [historyKey, setHistoryKey] = useState(0);
+  const [quickPickCount, setQuickPickCount] = useState(1);
+  const [multipleSets, setMultipleSets] = useState(null);
 
   const generateNumbers = async () => {
     setIsLoading(true);
     setError(null);
+    setMultipleSets(null);
 
     try {
       const response = await fetch('/api/generate-numbers', {
@@ -23,22 +31,48 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          strategy,
+          count: quickPickCount,
+          useAI: quickPickCount === 1
+        })
       });
 
       const data = await response.json();
 
       if (data.success) {
-        setNumbers(data.numbers);
-        setPowerball(data.powerball);
-        setReasoning(data.reasoning);
+        if (data.multiple) {
+          // Multiple sets generated
+          setMultipleSets(data.sets);
+          setNumbers([]);
+          setPowerball(null);
+          setReasoning('');
 
-        // Save to localStorage
-        saveToHistory({
-          numbers: data.numbers,
-          powerball: data.powerball,
-          reasoning: data.reasoning,
-          timestamp: data.timestamp,
-        });
+          // Save all sets to history
+          data.sets.forEach(set => {
+            saveToHistory({
+              numbers: set.numbers,
+              powerball: set.powerball,
+              strategy: data.strategy,
+              timestamp: data.timestamp,
+            });
+          });
+        } else {
+          // Single set generated
+          setNumbers(data.numbers);
+          setPowerball(data.powerball);
+          setReasoning(data.reasoning);
+          setMultipleSets(null);
+
+          // Save to localStorage
+          saveToHistory({
+            numbers: data.numbers,
+            powerball: data.powerball,
+            reasoning: data.reasoning,
+            strategy: data.strategy,
+            timestamp: data.timestamp,
+          });
+        }
 
         // Force history list to re-render
         setHistoryKey(prev => prev + 1);
@@ -75,26 +109,36 @@ export default function Home() {
       </Head>
 
       <main className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-100 to-pink-100 py-12 px-4">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-5xl font-bold text-gray-800 mb-3">
-              🎲 AI Powerball Generator
+              🎲 AI Powerball Generator Pro
             </h1>
             <p className="text-gray-600 text-lg">
-              Let AI pick your lucky numbers
+              Smart strategies, historical insights, AI-powered picks
             </p>
           </div>
 
           {/* Main Card */}
           <div className="bg-white rounded-2xl shadow-2xl p-8 mb-8">
-            <NumberDisplay
-              numbers={numbers}
-              powerball={powerball}
-              isLoading={isLoading}
+            {/* Strategy Selector */}
+            <StrategySelector
+              selectedStrategy={strategy}
+              onStrategyChange={setStrategy}
             />
 
-            <div className="mt-8 mb-8">
+            {/* Quick Pick Settings */}
+            <div className="mb-6">
+              <QuickPickSettings
+                count={quickPickCount}
+                onCountChange={setQuickPickCount}
+                isLoading={isLoading}
+              />
+            </div>
+
+            {/* Generate Button */}
+            <div className="mb-8">
               <GenerateButton onClick={generateNumbers} isLoading={isLoading} />
             </div>
 
@@ -104,7 +148,26 @@ export default function Home() {
               </div>
             )}
 
-            <AIReasoning reasoning={reasoning} isLoading={isLoading} />
+            {/* Results - Either single or multiple sets */}
+            {multipleSets ? (
+              <MultipleSetsDisplay sets={multipleSets} strategy={strategy} />
+            ) : (
+              <>
+                <NumberDisplay
+                  numbers={numbers}
+                  powerball={powerball}
+                  isLoading={isLoading}
+                />
+                <div className="mt-6">
+                  <AIReasoning reasoning={reasoning} isLoading={isLoading} />
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Statistics Dashboard */}
+          <div className="mb-8">
+            <StatsDashboard />
           </div>
 
           {/* History */}
@@ -112,8 +175,8 @@ export default function Home() {
 
           {/* Footer */}
           <div className="text-center mt-8 text-gray-500 text-sm">
-            <p>Generated numbers are AI-enhanced random selections.</p>
-            <p className="mt-1">Play responsibly.</p>
+            <p>Generated numbers use AI and historical analysis for entertainment.</p>
+            <p className="mt-1">Lottery is random. Past results don't predict future drawings. Play responsibly.</p>
           </div>
         </div>
       </main>
