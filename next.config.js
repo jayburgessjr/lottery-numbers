@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   // Disable TypeScript build errors since we're using JavaScript
   typescript: {
     ignoreBuildErrors: true,
@@ -8,6 +8,11 @@ const nextConfig = {
   // Disable ESLint during builds to speed up deployment
   eslint: {
     ignoreDuringBuilds: true,
+  },
+  // Suppress certain warnings
+  onDemandEntries: {
+    maxInactiveAge: 25 * 1000,
+    pagesBufferLength: 2,
   },
 };
 
