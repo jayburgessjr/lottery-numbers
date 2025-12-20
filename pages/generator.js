@@ -10,7 +10,7 @@ import QuickPickSettings from '../components/QuickPickSettings';
 import MultipleSetsDisplay from '../components/MultipleSetsDisplay';
 import StatsDashboard from '../components/StatsDashboard';
 
-export default function Home() {
+export default function Generator() {
   const [numbers, setNumbers] = useState([]);
   const [powerball, setPowerball] = useState(null);
   const [reasoning, setReasoning] = useState('');
@@ -43,13 +43,11 @@ export default function Home() {
 
       if (data.success) {
         if (data.multiple) {
-          // Multiple sets generated
           setMultipleSets(data.sets);
           setNumbers([]);
           setPowerball(null);
           setReasoning('');
 
-          // Save all sets to history
           data.sets.forEach(set => {
             saveToHistory({
               numbers: set.numbers,
@@ -59,13 +57,11 @@ export default function Home() {
             });
           });
         } else {
-          // Single set generated
           setNumbers(data.numbers);
           setPowerball(data.powerball);
           setReasoning(data.reasoning);
           setMultipleSets(null);
 
-          // Save to localStorage
           saveToHistory({
             numbers: data.numbers,
             powerball: data.powerball,
@@ -75,7 +71,6 @@ export default function Home() {
           });
         }
 
-        // Force history list to re-render
         setHistoryKey(prev => prev + 1);
       } else {
         setError(data.error || 'Failed to generate numbers');
@@ -92,8 +87,6 @@ export default function Home() {
     try {
       const history = JSON.parse(localStorage.getItem('powerball_history') || '[]');
       history.unshift(generation);
-
-      // Keep only last 50 generations
       const trimmedHistory = history.slice(0, 50);
       localStorage.setItem('powerball_history', JSON.stringify(trimmedHistory));
     } catch (error) {
@@ -104,95 +97,86 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>AI Powerball Generator</title>
-        <meta name="description" content="Generate AI-powered Powerball lottery numbers" />
+        <title>Generator - Powerball</title>
+        <meta name="description" content="Generate strategic Powerball numbers" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <main className="min-h-screen bg-slate-50 py-8 px-4 sm:py-12">
-        <div className="max-w-6xl mx-auto">
-          {/* Navigation */}
-          <div className="mb-6">
-            <Link href="/">
-              <button className="group flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors">
-                <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-                <span className="font-medium">Back to Home</span>
-              </button>
-            </Link>
-          </div>
+      <main className="min-h-screen bg-white">
+        {/* Header */}
+        <header className="border-b px-4 h-16 flex items-center" style={{ borderColor: 'var(--color-border)' }}>
+          <Link href="/">
+            <button className="text-body transition-opacity hover:opacity-70" style={{ color: 'var(--color-text-secondary)' }}>
+              ← Back
+            </button>
+          </Link>
+        </header>
 
-          {/* Header */}
-          <div className="text-center mb-8 sm:mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-900 rounded-2xl mb-4 shadow-lg">
-              <span className="text-3xl">🎲</span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-2 tracking-tight">
-              Powerball Generator Pro
-            </h1>
-            <p className="text-slate-600 text-base sm:text-lg font-medium">
-              Data-driven strategies • Historical insights • AI-powered analysis
-            </p>
-          </div>
-
-          {/* Main Card */}
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8 mb-6 sm:mb-8">
-            {/* Strategy Selector */}
+        {/* Main Generator */}
+        <div className="max-w-2xl mx-auto px-4 py-24">
+          {/* Strategy Selector */}
+          <div className="mb-12">
             <StrategySelector
               selectedStrategy={strategy}
               onStrategyChange={setStrategy}
             />
+          </div>
 
-            {/* Quick Pick Settings */}
-            <div className="mb-6">
-              <QuickPickSettings
-                count={quickPickCount}
-                onCountChange={setQuickPickCount}
+          {/* Quick Pick Settings */}
+          <div className="mb-12">
+            <QuickPickSettings
+              count={quickPickCount}
+              onCountChange={setQuickPickCount}
+              isLoading={isLoading}
+            />
+          </div>
+
+          {/* Generate Button */}
+          <div className="mb-12">
+            <GenerateButton onClick={generateNumbers} isLoading={isLoading} />
+          </div>
+
+          {/* Error Display */}
+          {error && (
+            <div className="mb-12 p-4 text-center text-body" style={{
+              backgroundColor: '#FEF2F2',
+              color: '#991B1B',
+              border: '1px solid #FCA5A5'
+            }}>
+              {error}
+            </div>
+          )}
+
+          {/* Results */}
+          {multipleSets ? (
+            <MultipleSetsDisplay sets={multipleSets} strategy={strategy} />
+          ) : (
+            <>
+              <NumberDisplay
+                numbers={numbers}
+                powerball={powerball}
                 isLoading={isLoading}
               />
-            </div>
-
-            {/* Generate Button */}
-            <div className="mb-8">
-              <GenerateButton onClick={generateNumbers} isLoading={isLoading} />
-            </div>
-
-            {error && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-center">
-                {error}
-              </div>
-            )}
-
-            {/* Results - Either single or multiple sets */}
-            {multipleSets ? (
-              <MultipleSetsDisplay sets={multipleSets} strategy={strategy} />
-            ) : (
-              <>
-                <NumberDisplay
-                  numbers={numbers}
-                  powerball={powerball}
-                  isLoading={isLoading}
-                />
-                <div className="mt-6">
+              {reasoning && (
+                <div className="mt-8">
                   <AIReasoning reasoning={reasoning} isLoading={isLoading} />
                 </div>
-              </>
-            )}
-          </div>
+              )}
+            </>
+          )}
+        </div>
 
-          {/* Statistics Dashboard */}
-          <div className="mb-8">
+        {/* Statistics Dashboard */}
+        <div className="border-t py-24" style={{ borderColor: 'var(--color-border)' }}>
+          <div className="max-w-4xl mx-auto px-4">
             <StatsDashboard />
           </div>
+        </div>
 
-          {/* History */}
-          <HistoryList key={historyKey} />
-
-          {/* Footer */}
-          <div className="text-center mt-8 sm:mt-12 text-slate-500 text-sm max-w-2xl mx-auto">
-            <p className="font-medium">Generated numbers use AI and historical analysis for entertainment purposes only.</p>
-            <p className="mt-2 text-slate-400">Lottery drawings are random. Past results don't predict future outcomes. Play responsibly.</p>
+        {/* History */}
+        <div className="border-t py-24" style={{ borderColor: 'var(--color-border)' }}>
+          <div className="max-w-2xl mx-auto px-4">
+            <HistoryList key={historyKey} />
           </div>
         </div>
       </main>

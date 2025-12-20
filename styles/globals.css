@@ -2,25 +2,92 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-slate-50 text-slate-900 antialiased;
-  font-feature-settings: 'liga' 1, 'calt' 1;
+@layer base {
+  :root {
+    /* Minimal Design System */
+    --color-bg: #FFFFFF;
+    --color-surface: #FAFAFA;
+    --color-border: #E5E5E5;
+    --color-text-primary: #171717;
+    --color-text-secondary: #737373;
+    --color-text-tertiary: #A3A3A3;
+    --color-accent: #2563EB;
+    --color-accent-light: #F8FAFC;
+
+    /* Spacing Scale (8px base) */
+    --space-xs: 8px;
+    --space-sm: 16px;
+    --space-md: 24px;
+    --space-lg: 48px;
+    --space-xl: 96px;
+    --space-xxl: 160px;
+  }
+
+  body {
+    @apply bg-white text-neutral-900 antialiased;
+    font-family: Inter, system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'liga' 1, 'calt' 1;
+    color: var(--color-text-primary);
+    background-color: var(--color-bg);
+  }
+
+  /* Typography Scale */
+  .text-hero {
+    font-size: 72px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .text-headline {
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+
+  .text-subhead {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .text-body {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  .text-label {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .text-caption {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
 }
 
-/* Professional scrollbar */
+/* Minimal scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-slate-100;
+  background: var(--color-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 rounded-full;
+  background: var(--color-border);
+  border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-slate-400;
+  background: var(--color-text-tertiary);
 }

@@ -50,43 +50,55 @@ export default function HistoryList() {
 
   if (history.length === 0) {
     return (
-      <div className="bg-white rounded-lg p-6 border border-gray-200">
-        <h3 className="font-semibold text-gray-800 mb-3">Generation History</h3>
-        <p className="text-gray-500 text-sm">No generations yet. Generate your first set of numbers!</p>
+      <div>
+        <p className="text-label mb-6" style={{ color: 'var(--color-text-tertiary)' }}>
+          History
+        </p>
+        <p className="text-body text-center" style={{ color: 'var(--color-text-secondary)' }}>
+          No generations yet. Generate your first set of numbers.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-      <h3 className="font-semibold text-gray-800 mb-4">Generation History</h3>
-      <div className="space-y-3 max-h-96 overflow-y-auto">
-        {history.map((item, index) => (
+    <div>
+      <p className="text-label mb-6" style={{ color: 'var(--color-text-tertiary)' }}>
+        History
+      </p>
+      <div className="space-y-6">
+        {history.slice(0, 10).map((item, index) => (
           <div
             key={index}
-            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group"
+            className="flex items-center justify-between py-6 border-b"
+            style={{ borderColor: index === Math.min(9, history.length - 1) ? 'transparent' : 'var(--color-border)' }}
           >
             <div className="flex-1">
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-2 mb-2">
                 {item.numbers.map((num, i) => (
-                  <span
+                  <div
                     key={i}
-                    className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold"
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold text-white"
+                    style={{ backgroundColor: 'var(--color-text-primary)' }}
                   >
                     {num}
-                  </span>
+                  </div>
                 ))}
-                <span className="text-gray-400 mx-1">+</span>
-                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-100 text-red-700 text-sm font-semibold">
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold text-white ml-1"
+                  style={{ backgroundColor: 'var(--color-accent)' }}
+                >
                   {item.powerball}
-                </span>
+                </div>
               </div>
-              <p className="text-xs text-gray-500 mt-2">{formatTimestamp(item.timestamp)}</p>
+              <p className="text-caption" style={{ color: 'var(--color-text-tertiary)' }}>
+                {formatTimestamp(item.timestamp)}
+              </p>
             </div>
             <button
               onClick={() => copyToClipboard(item.numbers, item.powerball)}
-              className="ml-3 px-3 py-1 text-xs text-gray-600 hover:text-gray-900 border border-gray-300 rounded hover:bg-white transition-colors opacity-0 group-hover:opacity-100"
-              title="Copy to clipboard"
+              className="text-caption transition-opacity hover:opacity-70"
+              style={{ color: 'var(--color-text-secondary)', textDecoration: 'underline' }}
             >
               Copy
             </button>
